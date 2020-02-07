@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransactions extends StatefulWidget {
   final Function addTx;
@@ -10,13 +11,28 @@ class NewTransactions extends StatefulWidget {
 class _NewTransactionsState extends State<NewTransactions> {
   final itemNameController = new TextEditingController();
   final itemPriceController = new TextEditingController();
+  DateTime _selectedDateTime;
   void submitData() {
     final enteredName = itemNameController.text;
     final enteredPrice = double.parse(itemPriceController.text);
-    if (enteredName.isEmpty || enteredPrice < 0) {
+    if (enteredName.isEmpty || enteredPrice < 0 || _selectedDateTime == null) {
       return;
     }
-    widget.addTx(enteredName, enteredPrice);
+    widget.addTx(enteredName, enteredPrice, _selectedDateTime);
+    Navigator.pop(context);
+  }
+
+  void _pickDate() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2020),
+            lastDate: DateTime.now())
+        .then((pickedDate) {
+      setState(() {
+        _selectedDateTime = pickedDate;
+      });
+    });
   }
 
   @override
@@ -33,17 +49,47 @@ class _NewTransactionsState extends State<NewTransactions> {
                 labelText: "Item Name",
               ),
               controller: itemNameController,
+              onSubmitted: (_) {
+                submitData();
+              },
             ),
             TextField(
               decoration: InputDecoration(
                 labelText: "Item Price",
               ),
+              onSubmitted: (_) {
+                submitData();
+              },
               controller: itemPriceController,
               keyboardType: TextInputType.number,
             ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    _selectedDateTime == null
+                        ? "No Date Entered"
+                        : "Picked Date: ${DateFormat.yMMMd().format(_selectedDateTime)}",
+                    style: Theme.of(context)
+                        .textTheme
+                        .title
+                        .copyWith(fontSize: 16, fontWeight: FontWeight.normal),
+                  ),
+                ),
+                FlatButton(
+                  child: Text(
+                    "Select Purchased Date",
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  onPressed: _pickDate,
+                ),
+              ],
+            ),
             RaisedButton(
               textColor: Colors.white,
-              color: Colors.grey,
+              color: Theme.of(context).accentColor,
               child: Text(
                 "Add Transaction",
               ),

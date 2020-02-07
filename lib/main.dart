@@ -1,3 +1,4 @@
+import './widgets/chart.dart';
 import 'package:expenses_tracker/widgets/new_transactions.dart';
 
 import './models/transaction.dart';
@@ -11,8 +12,28 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
+      theme: ThemeData(
+        primarySwatch: Colors.brown,
+        accentColor: Colors.green,
+        fontFamily: "Acme",
+        textTheme: TextTheme(
+          title: TextStyle(
+            fontFamily: "Acme",
+            fontSize: 14,
+//            fontWeight: FontWeight.bold,
+          ),
+        ),
+        appBarTheme: AppBarTheme(
+          textTheme: TextTheme(
+            title: TextStyle(
+                fontFamily: "Inconsolata",
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
       home: ExpensesPage(),
+      title: "Expenses Tracker",
     );
   }
 }
@@ -24,14 +45,20 @@ class ExpensesPage extends StatefulWidget {
 
 class _ExpensesPageState extends State<ExpensesPage> {
   List<Transaction> _userTransactions = [
-    Transaction(
-        itemName: "Groceries", itemPrice: 12.50, itemDate: DateTime.now()),
-    Transaction(itemName: "Food", itemPrice: 10.50, itemDate: DateTime.now()),
-    Transaction(itemName: "Car", itemPrice: 1900.50, itemDate: DateTime.now()),
+//    Transaction(
+//        itemName: "Groceries", itemPrice: 12.50, itemDate: DateTime.now()),
+//    Transaction(itemName: "Food", itemPrice: 10.50, itemDate: DateTime.now()),
+//    Transaction(itemName: "Car", itemPrice: 1900.50, itemDate: DateTime.now()),
   ];
-  void _addNewTransaction(String txName, double txPrice) {
-    final newTx = Transaction(
-        itemName: txName, itemPrice: txPrice, itemDate: DateTime.now());
+  List<Transaction> get _recentTransactions {
+    return _userTransactions.where((tx) {
+      return tx.itemDate.isAfter(DateTime.now().subtract((Duration(days: 7))));
+    }).toList();
+  }
+
+  void _addNewTransaction(String txName, double txPrice, DateTime txDate) {
+    final newTx =
+        Transaction(itemName: txName, itemPrice: txPrice, itemDate: txDate);
     setState(() {
       _userTransactions.add(newTx);
     });
@@ -66,21 +93,13 @@ class _ExpensesPageState extends State<ExpensesPage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                child: Text("Chart"),
-                //TODO Chart
-                elevation: 5,
-              ),
-            ),
+            Chart(_recentTransactions),
             TransactionList(_userTransactions),
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
         child: Icon(
           Icons.add,
           color: Colors.white,
