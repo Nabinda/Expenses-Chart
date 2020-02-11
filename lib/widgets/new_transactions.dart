@@ -37,65 +37,69 @@ class _NewTransactionsState extends State<NewTransactions> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                labelText: "Item Name",
-              ),
-              controller: itemNameController,
-              onSubmitted: (_) {
-                submitData();
-              },
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: "Item Price",
-              ),
-              onSubmitted: (_) {
-                submitData();
-              },
-              controller: itemPriceController,
-              keyboardType: TextInputType.number,
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    _selectedDateTime == null
-                        ? "No Date Entered"
-                        : "Picked Date: ${DateFormat.yMMMd().format(_selectedDateTime)}",
-                    style: Theme.of(context)
-                        .textTheme
-                        .title
-                        .copyWith(fontSize: 16, fontWeight: FontWeight.normal),
-                  ),
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 10,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              TextField(
+                decoration: InputDecoration(
+                  labelText: "Item Name",
                 ),
-                FlatButton(
-                  child: Text(
-                    "Select Purchased Date",
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                controller: itemNameController,
+                onSubmitted: (_) {
+                  submitData();
+                },
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: "Item Price",
+                ),
+                onSubmitted: (_) {
+                  submitData();
+                },
+                controller: itemPriceController,
+                keyboardType: TextInputType.number,
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      _selectedDateTime == null
+                          ? "No Date Entered"
+                          : "Picked Date: ${DateFormat.yMMMd().format(_selectedDateTime)}",
+                      style: Theme.of(context).textTheme.title.copyWith(
+                          fontSize: 16, fontWeight: FontWeight.normal),
                     ),
                   ),
-                  onPressed: _pickDate,
-                ),
-              ],
-            ),
-            RaisedButton(
-              textColor: Colors.white,
-              color: Theme.of(context).accentColor,
-              child: Text(
-                "Add Transaction",
+                  FlatButton(
+                    child: Text(
+                      "Select Purchased Date",
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    onPressed: _pickDate,
+                  ),
+                ],
               ),
-              onPressed: submitData,
-            )
-          ],
+              RaisedButton(
+                textColor: Colors.white,
+                color: Theme.of(context).accentColor,
+                child: Text(
+                  "Add Transaction",
+                ),
+                onPressed: submitData,
+              )
+            ],
+          ),
         ),
       ),
     );
