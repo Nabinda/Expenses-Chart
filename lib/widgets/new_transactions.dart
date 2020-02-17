@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:expenses_tracker/widgets/adaptive_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -79,15 +83,9 @@ class _NewTransactionsState extends State<NewTransactions> {
                           fontSize: 16, fontWeight: FontWeight.normal),
                     ),
                   ),
-                  FlatButton(
-                    child: Text(
-                      "Select Purchased Date",
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    onPressed: _pickDate,
-                  ),
+                  AdaptiveButton(
+                    onPress: _pickDate,
+                  )
                 ],
               ),
               RaisedButton(
